@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AI Photo Gallery</title>
+
+  <!-- ✅ Style -->
+  <link rel="stylesheet" href="style.css">
+ 
+  <!-- ✅ TensorFlow.js Library -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.3.0/dist/tf.min.js"></script>
+
+  <!-- ✅ Teachable Machine Library -->
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+</head>
+
+<body>
+
+  <h1>📸 AI Photo Gallery</h1>
+
+  <!-- ✅ Upload and Voice -->
+  <input type="file" id="upload" accept="image/*" multiple>
+  <button onclick="startListening()">🎤 Voice Search</button>
+
+  <!-- ✅ Chatbot -->
+  <textarea id="chatInput" placeholder="Ask me something..." rows="2" cols="40"></textarea><br>
+  <button onclick="askChatbot()">💬 Ask AI</button>
+  <div id="chatbotResponse" style="margin-top: 10px; font-weight: bold;"></div>
+
+  <!-- ✅ Image Gallery -->
+  <div id="gallery"></div>
+
+  <!-- ✅ Your JS functions -->
+  <script src="script.js"></script>
+
+  <!-- ✅ AI Auto-Tagging Code -->
+  <script>
+    const URL = "https://teachablemachine.withgoogle.com/models/Ml-Tbkf28/";
+    let model, labelContainer, maxPredictions;
+
+    async function loadModel() {
+      const modelURL = URL + "model.json";
+      const metadataURL = URL + "metadata.json";
+
+      model = await tmImage.load(modelURL, metadataURL);
+      labelContainer = document.createElement("div");
+      labelContainer.style.marginTop = "20px";
+      labelContainer.style.fontWeight = "bold";
+      document.body.appendChild(labelContainer);
+      maxPredictions = model.getTotalClasses();
+    }
+
+    async function predictImage(image) {
+     if (!model) {
+      labelContainer.innerText = "Model not loaded yet.";
+      return;
+    }
+      const prediction = await model.predict(image, false);
+      let highest = prediction[0];
+      for (let p of prediction) {
+        if (p.probability > highest.probability) {
+          highest = p;
+        }
+      }
+      labelContainer.innerText = `📷 This image looks like: ${highest.className} (${(highest.probability * 100).toFixed(1)}%)`;
+    }
+
+    document.getElementById("upload").addEventListener("change", function(event) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.src = e.target.result;
+        img.onload = () => predictImage(img);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    loadModel(); // Load model on page load
+  </script>
+
+</body>
+</html>
