@@ -42,38 +42,3 @@ function startListening() {
 
   recognition.start();
 }
-
-// ✅ CHATBOT FUNCTION
-async function askChatbot() {
-  const question = document.getElementById("chatInput").value;
-  const responseBox = document.getElementById("chatbotResponse");
-  responseBox.innerText = "Thinking...";
-
-  const apiKey = "YOUR_API_KEY_HERE"; // <-- Don't expose real key!
-
-  try {
-    const res = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: question }]
-      })
-    });
-
-    const data = await res.json();
-
-    let reply = "Sorry, no reply from AI.";
-    if (data.choices && data.choices.length > 0) {
-      reply = data.choices[0].message.content;
-    }
-
-    responseBox.innerText = "💡 " + reply;
-  } catch (error) {
-    responseBox.innerText = "❌ Error talking to AI: " + error.message;
-    console.error("API Error:", error);
-  }
-}
