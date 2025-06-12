@@ -3,6 +3,7 @@ body {
   text-align: center;
   background: #f0f0f0;
   padding: 20px;
+  margin: 0;
 }
 
 #upload {
@@ -21,7 +22,9 @@ body {
   width: 200px;
   height: auto;
   border-radius: 10px;
-  box-shadow: 0 0 10px 
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* ✅ Fully written & closed */
+}
+
 #header {
   display: flex;
   align-items: center;
@@ -40,4 +43,26 @@ h1 {
   font-size: 32px;
   color: #2c3e50;
   margin: 0;
+}
+
+/* ✅ Mobile Responsive Support */
+@media (max-width: 600px) {
+  #header {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  h1 {
+    font-size: 22px;
+    text-align: center;
+  }
+
+  input, button, textarea {
+    width: 90%;
+    font-size: 14px;
+  }
+
+  #gallery img {
+    width: 90%;
+  }
 }
