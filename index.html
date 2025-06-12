@@ -2,34 +2,40 @@
 <html>
 <head>
   <title>AI Photo Gallery</title>
- <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ✅ Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"> 
 
   <!-- ✅ Style -->
   <link rel="stylesheet" href="style.css">
- 
+
   <!-- ✅ TensorFlow.js Library -->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.3.0/dist/tf.min.js"></script>
 
   <!-- ✅ Teachable Machine Library -->
   <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+
+  <!-- ✅ Define image array globally -->
+  <script>let images = [];</script>
+  <!-- ✅ Your JS functions -->
+  <script src="script.js" defer></script>
 </head>
 
 <body>
   <!-- 🔰 Logo and Title Banner -->
-<div id="header">
-  <img src="logo.png" alt="Logo" id="logo">
-  <h1>Vishnu’s AI Photo Gallery</h1>
-</div>
+  <div id="header">
+    <img src="logo.png" alt="Logo" id="logo">
+    <h1>Vishnu’s AI Photo Gallery</h1>
+  </div>
 
   <!-- ✅ Upload and Voice -->
   <input type="file" id="upload" accept="image/*" multiple>
   <button onclick="startListening()">🎤 Voice Search</button>
   <button onclick="displayImages(images)">🔄 Show All</button>
+
   <!-- ✅ Image Gallery -->
   <div id="gallery"></div>
-
-  <!-- ✅ Your JS functions -->
-  <script src="script.js"></script>
 
   <!-- ✅ AI Auto-Tagging Code -->
   <script>
@@ -49,10 +55,10 @@
     }
 
     async function predictImage(image) {
-     if (!model) {
-      labelContainer.innerText = "Model not loaded yet.";
-      return;
-    }
+      if (!model) {
+        labelContainer.innerText = "Model not loaded yet.";
+        return;
+      }
       const prediction = await model.predict(image, false);
       let highest = prediction[0];
       for (let p of prediction) {
